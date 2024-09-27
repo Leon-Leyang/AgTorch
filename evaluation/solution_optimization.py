@@ -91,9 +91,11 @@ def run_test_time_training(sample):
 
 
 args = config()
+args.task = 'GPQA_main'
+args.engine = 'azure-gpt4o'
 llm_engine = tg.get_engine(engine_name=args.engine)
 tg.set_backward_engine(llm_engine, override=True)
-test_set = load_instance_task(args.task, evaluation_api=llm_engine)
+test_set = load_instance_task(args.task, evaluation_api=llm_engine, max_samples=10)
 ensembler = MajorityVoting()
 
 all_solutions = {}

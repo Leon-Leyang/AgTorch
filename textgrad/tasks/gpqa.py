@@ -39,6 +39,10 @@ class GPQA(Dataset):
         self.subset = subset
         self.data = load_dataset("Idavidrein/gpqa", subset, split="train", cache_dir=root)
         self._task_description = 'GPQA task' # Need to update
+
+        if 'max_samples' in kwargs:
+            self.data = self.data.select(range(min(len(self.data), kwargs['max_samples'])))
+            print(f"Using {len(self.data)} samples from the dataset.")
             
     def __getitem__(self, index):
         row = self.data[index]
@@ -66,7 +70,7 @@ class GPQA(Dataset):
 
 class GPQAInstanceDataset(GPQA):
     def __init__(self, evaluation_api, subset:str, root: str=None, split: str="train", max_samples=-1):
-        super().__init__(subset, root, split, max_samples)
+        super().__init__(subset, root, split, max_samples=max_samples)
         self.evaluation_api = evaluation_api
 
         
